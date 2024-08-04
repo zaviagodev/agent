@@ -26,6 +26,9 @@ services:
       - redis-cache
       - redis-queue
       - redis-socketio
+    logging:
+      options:
+        max-size: 10m
   socketio:
     image: {{ docker_image }}
     command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
@@ -38,6 +41,9 @@ services:
     depends_on:
       - redis-socketio
       - web
+    logging:
+      options:
+        max-size: 10m
   scheduler:
     image: {{ docker_image }}
     command: ["bench", "schedule"]
@@ -49,6 +55,9 @@ services:
       - redis-cache
       - redis-queue
       - redis-socketio
+    logging:
+      options:
+        max-size: 10m
   worker_default:
     image: {{ docker_image }}
     command: ["bench", "worker", "--queue", "default"]
@@ -62,6 +71,9 @@ services:
       - redis-socketio
     deploy:
       replicas: {{ background_workers }}
+    logging:
+      options:
+        max-size: 10m
   worker_short:
     image: {{ docker_image }}
     command: ["bench", "worker", "--queue", "short"]
@@ -75,6 +87,9 @@ services:
       - redis-socketio
     deploy:
       replicas: {{ background_workers }}
+    logging:
+      options:
+        max-size: 10m
   worker_long:
     image: {{ docker_image }}
     command: ["bench", "worker", "--queue", "long"]
@@ -88,12 +103,24 @@ services:
       - redis-socketio
     deploy:
       replicas: {{ background_workers }}
+    logging:
+      options:
+        max-size: 10m
   redis-cache:
     image: redis:6.0
+    logging:
+      options:
+        max-size: 10m
   redis-queue:
     image: redis:6.0
+    logging:
+      options:
+        max-size: 10m
   redis-socketio:
     image: redis:6.0
+    logging:
+      options:
+        max-size: 10m
 
 # Any container should be allowed to manually attach to default overlay network
 networks:
